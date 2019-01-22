@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^6.2.0"
+  },
   "devDependencies": {
     "istanbul": "^1.1.0-alpha.1",
     "nodemon": "^1.18.9",
@@ -12,7 +14,7 @@
   },
   "scripts": {
     "test": "nodemon ./public/js/test/test.js | tap-spec",
-    "cover":"istanbul cover tape ./public/js/test/test.js"
+    "cover": "istanbul cover tape ./public/js/test/test.js"
   },
   "repository": {
     "type": "git",
