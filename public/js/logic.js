@@ -10,6 +10,27 @@ function fetch({ method, url, query, callback }) {
   xhr.send();
 }
 
+function getMoviesData(response) {
+  return [
+    {
+      id: "",
+      title: "",
+      posterPath: "",
+      overview: "",
+      voteAverage: "",
+      releaseDate: "",
+      genre: getGenre(id),
+    }
+  ];
+}
+
+function getGenre(movieId) {
+  let url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${
+    config.MY_KEY
+  }`;
+  return ["genre1", "genre2"];
+}
+
 if (typeof module !== "undefined") {
-  module.exports = { fetch };
+  module.exports = { fetch, getMoviesData };
 }
