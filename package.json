@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "nodemon ./public/js/test/test.js | tap-spec",
-    "cover":"istanbul cover tape ./public/js/test/test.js"
+    "cover": "istanbul cover tape ./public/js/test/test.js"
   },
   "repository": {
     "type": "git",
