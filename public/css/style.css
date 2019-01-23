@@ -1,0 +1,58 @@
+.popup-container {
+  font-family: "Noto Sans KR";
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #575c6db9;
+  visibility: hidden;
+  opacity: 0;
+}
+.popup-container-onclick {
+  visibility: visible;
+  opacity: 1;
+}
+.popup-box {
+  margin: 150px auto;
+  padding: 0 20px 20px 20px;
+  border-radius: 10px;
+  background: #fff;
+  width: 35%;
+}
+.popup-content {
+  margin: 150px auto;
+  padding: 0 20px 20px 20px;
+  border-radius: 10px;
+  background: #fff;
+  width: 35%;
+}
+.close-popup {
+  position: relative;
+  left: 95%;
+  bottom: 100%;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 2.5em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  color: #464b5e;
+}
+.popup-confirm-button {
+  position: relative;
+  left: 85%;
+  font-family: "Noto Sans KR";
+  text-decoration: none;
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 5px;
+  border-radius: 4px;
+  background: #fff;
+  color: #464b5e;
+  border: #464b5e solid;
+}
+.popup-confirm-button:hover {
+  cursor: pointer;
+  background: #464b5e;
+  color: #fff;
+}
