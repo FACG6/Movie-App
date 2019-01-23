@@ -1,5 +1,5 @@
 // general request function
-function fetch({ method, url, query, callback}) {
+function fetch({ method, url, query, callback }) {
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4) {
@@ -13,23 +13,9 @@ function fetch({ method, url, query, callback}) {
   xhr.send();
 }
 
-// // The user will searThe user will search for a movie, a request will be sent, and a callbackch for a movie, a request will be sent, and a callback
-// function getRequest(url, query, callback) {
-//   const url = url + query;
-
-//   fetch({
-//     method: "GET",
-//     url: url,
-//     callback: (error, result) => {
-//       if (error) return "Error";
-//       else callback(getMoviesData(result));
-//     }
-//   });
-// }
 // This function returns an array of the movie details, stored in objects //
 function getMoviesData(response, callback) {
-  const allMovies = response.results;
-  let data = allMovies.map(movie => {
+  let data = response.results.map(movie => {
     return {
       id: movie.id,
       title: movie.title,
@@ -47,7 +33,7 @@ function getSimilarMoviesData(response) {
   return allSimilarMovies.map(similarMovie => {
     return {
       title: similarMovie.original_title,
-      image: poster_path
+      image: similarMovie.poster_path
     };
   });
 }
