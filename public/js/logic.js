@@ -28,14 +28,15 @@ function getMoviesData(response, callback) {
   callback(data);
 }
 
-function getSimilarMoviesData(response) {
-  const allSimilarMovies = response.results;
-  return allSimilarMovies.map(similarMovie => {
+function getSimilarMoviesData(response, callback) {
+  let allSimilarMovies = response.results.filter((movie, index) => index < 5);
+  allSimilarMovies = allSimilarMovies.map(similarMovie => {
     return {
       title: similarMovie.original_title,
-      image: similarMovie.poster_path
+      posterPath: similarMovie.poster_path,
     };
   });
+  callback(allSimilarMovies);
 }
 
 function getSimilarMovies(movieId, callback) {
@@ -45,7 +46,8 @@ function getSimilarMovies(movieId, callback) {
   fetch({
     method: "GET",
     url: url,
-    callback: callback(getSimilarMoviesData(response))
+    query: "",
+    callback: callback
   });
 }
 

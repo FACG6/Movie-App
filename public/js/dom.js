@@ -13,6 +13,10 @@ searchForm.addEventListener("submit", event => {
   event.preventDefault();
 
   let query = searchInput.value;
+  if (!query) {
+    alert("Please Enter a valid movie name");
+    return;
+  }
   searchInput.value = "";
   fetch({
     method: "GET",
@@ -23,21 +27,44 @@ searchForm.addEventListener("submit", event => {
 });
 
 function renderSearchResults(results) {
+  while (moviesList.firstChild) moviesList.removeChild(moviesList.firstChild);
+  if (results.length == 0) {
+    let noResult = document.createElement("li");
+    noResult.textContent = "There are no movies with the name you entered";
+    moviesList.appendChild(noResult);
+    return;
+  }
   results.forEach(movie => {
     let movieItem = document.createElement("li");
-    movieItem.addEventListener("click", event => {
+
+    let movieTitle = document.createElement("span");
+    movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
+
+    let moviePoster = document.createElement("img");
+    moviePoster.classList.add("movie-poster");
+    moviePoster.src = imagesUrl + movie.posterPath;
+    //popup eventlistener
+    moviePoster.addEventListener("click", event => {
       let popupContainer = document.querySelector(".popup-container");
-      let popupClose = document.querySelector(".close-popup");
-      let popupContent = document.querySelector(".popup-content");
       popupContainer.classList.add("popup-container-onclick");
+
+      let popupClose = document.querySelector(".close-popup");
       popupClose.addEventListener("click", event => {
-        popupContent.innerHTML = "";
+        while (popupContent.firstChild)
+          popupContent.removeChild(popupContent.firstChild);
         popupContainer.classList.remove("popup-container-onclick");
       });
+      let imgDiv = document.createElement("div");
+      imgDiv.classList.add("popup-image-div");
+      let contentDiv = document.createElement("div");
+      contentDiv.classList.add("content-div");
+      let popupContent = document.querySelector(".popup-content");
+
       let movieTitle = document.createElement("h2");
       movieTitle.textContent = movie.title;
 
       let moviePoster = document.createElement("img");
+      moviePoster.classList.add("popup-movie-poster");
       moviePoster.src = imagesUrl + movie.posterPath;
 
       let movieDate = document.createElement("h4");
@@ -46,15 +73,48 @@ function renderSearchResults(results) {
       let movieDescription = document.createElement("p");
       movieDescription.textContent = movie.overview;
 
-      popupContent.appendChild(moviePoster);
-      popupContent.appendChild(movieTitle);
-      popupContent.appendChild(movieDate);
-      popupContent.appendChild(movieDescription);
+      let similarsDiv = document.createElement("div");
+      similarsDiv.classList.add("similars-div");
+      getSimilarMovies(movie.id, response =>
+        getSimilarMoviesData(response, renderSimilars)
+      );
+      function renderSimilars(similars) {
+        // similars = similars.results.filter((movie, index) => index < 5);
+        // console.log(similars);
+        similars.forEach(movie => {
+          let moviePoster = document.createElement("img");
+          moviePoster.classList.add("pointer-poster");
+          moviePoster.addEventListener("click", function(e) {
+            while (popupContent.firstChild)
+              popupContent.removeChild(popupContent.firstChild);
+            popupContainer.classList.remove("popup-container-onclick");
+            fetch({
+              method: "GET",
+              url: apiUrl,
+              query: movie.title,
+              callback: res => getMoviesData(res, renderSearchResults)
+            });
+          });
+          moviePoster.src = imagesUrl + movie.posterPath;
+          moviePoster.style.width = "75px";
+          moviePoster.style.height = "100px";
+          similarsDiv.appendChild(moviePoster);
+        });
+      }
+
+      let similarsHeading = document.createElement("h2");
+      similarsHeading.textContent = "Similar Movies";
+
+      imgDiv.appendChild(moviePoster);
+      popupContent.appendChild(imgDiv);
+      popupContent.appendChild(contentDiv);
+      contentDiv.appendChild(movieTitle);
+      contentDiv.appendChild(movieDate);
+      contentDiv.appendChild(movieDescription);
+      contentDiv.appendChild(similarsHeading);
+      contentDiv.appendChild(similarsDiv);
     });
-    let movieTitle = document.createElement("span");
-    let moviePoster = document.createElement("img");
-    movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
-    moviePoster.src = imagesUrl + movie.posterPath;
+
     movieItem.appendChild(moviePoster);
     movieItem.appendChild(movieTitle);
     moviesList.appendChild(movieItem);
