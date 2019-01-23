@@ -1,10 +1,6 @@
 // general request function
 
-function fetch({
-  method,
-  url,
-  callback
-}) {
+function fetch({method, url, callback}) {
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4)
@@ -22,7 +18,6 @@ function fetch({
 }
 
 // The user will search for a movie, a request will be sent, and a callback
-
 function getRequest(url, query, callback) {
   const url = `https://api.themoviedb.org/3/search/movie?api_key=${
   config.MY_KEY}&language=en-US&query=${query}`
@@ -37,10 +32,7 @@ function getRequest(url, query, callback) {
   })
 }
 
-
-
 // This function returns an array of the movie details, stored in objects //
-
 function getMoviesData(response) {
   const allMovies = response.results;
   return allMovies.map(movie => {
@@ -52,9 +44,30 @@ function getMoviesData(response) {
       voteAverage: movie.vote_average,
       releaseDate: movie.release_date,
     }
-  })
-
+  });
 }
+
+function getSimilarMoviesData(response) {
+  const allSimilarMovies = response.results;
+  return allSimilarMovies.map(similarMovie => {
+    return {
+      title: similarMovie.original_title,
+      image: poster_path
+    };
+  });
+}
+
+function getSimilarMovies(movieId, callback) {
+  let url = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6b4029e64c1862a24fbb74c05d0aace8`;
+  fetch({
+    method: "GET",
+    url: url,
+    callback: callback(getSimilarMoviesData(response))
+  });
+}
+
+
+
 
 //This function returns similar movies
 
