@@ -18,19 +18,30 @@ function getMoviesData(response) {
       posterPath: "",
       overview: "",
       voteAverage: "",
-      releaseDate: "",
-      genre: getGenre(id),
+      releaseDate: ""
     }
   ];
 }
 
-function getGenre(movieId) {
-  let url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${
-    config.MY_KEY
-  }`;
-  return ["genre1", "genre2"];
+function getSimilarMoviesData(response) {
+  const allSimilarMovies = response.results;
+  return allSimilarMovies.map(similarMovie => {
+    return {
+      title: similarMovie.original_title,
+      image: poster_path
+    };
+  });
+}
+
+function getSimilarMovies(movieId, callback) {
+  let url = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=6b4029e64c1862a24fbb74c05d0aace8`;
+  fetch({
+    method: "GET",
+    url: url,
+    callback: callback(getSimilarMoviesData(response))
+  });
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { fetch, getMoviesData };
+  module.exports = { fetch, getMoviesData, getGenre };
 }
