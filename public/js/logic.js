@@ -18,19 +18,19 @@ function fetch({method, url, callback}) {
 }
 
 // The user will search for a movie, a request will be sent, and a callback
-function getRequest(url, query, callback) {
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${
-  config.MY_KEY}&language=en-US&query=${query}`
+// function getRequest(url, query, callback) {
+//   const url = `https://api.themoviedb.org/3/search/movie?api_key=${
+//   config.MY_KEY}&language=en-US&query=${query}`
 
-  fetch({
-    method: "GET",
-    url: url,
-    callback: (error, result) => {
-      if (error) return "Error"
-      else callback(getMoviesData(result));
-    }
-  })
-}
+//   fetch({
+//     method: "GET",
+//     url: url,
+//     callback: (error, result) => {
+//       if (error) return "Error"
+//       else callback(getMoviesData(result));
+//     }
+//   })
+// }
 
 // This function returns an array of the movie details, stored in objects //
 function getMoviesData(response) {
@@ -39,10 +39,10 @@ function getMoviesData(response) {
     return {
       id: movie.id,
       title: movie.title,
-      posterPath: movie.poster_path,
+      posterPath: movie.posterPath,
       overview: movie.overview,
-      voteAverage: movie.vote_average,
-      releaseDate: movie.release_date,
+      voteAverage: movie.voteAverage,
+      releaseDate: movie.releaseDate,
     }
   });
 }
@@ -52,7 +52,7 @@ function getSimilarMoviesData(response) {
   return allSimilarMovies.map(similarMovie => {
     return {
       title: similarMovie.original_title,
-      image: poster_path
+      image: similarMovie.poster_path
     };
   });
 }
@@ -78,6 +78,6 @@ function getSimilarMovies(movieId, callback) {
 if (typeof module !== "undefined") {
   module.exports = {
     fetch,
-    getMoviesData
+    getMoviesData, getSimilarMoviesData
   };
 }
