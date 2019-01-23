@@ -1,11 +1,10 @@
 // let logic = require("./logic.js");
-
 let apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${
   config.MY_KEY
 }&language=en-US&query=`;
 let imagesUrl = "https://image.tmdb.org/t/p/w600_and_h900_bestv2";
-let searchForm = document.querySelector(".search-form");
-let searchInput = document.querySelector(".search-input");
+let searchForm = document.querySelector(".search_form");
+let searchInput = document.querySelector(".search_input");
 let container = document.querySelector(".container");
 let moviesList = document.querySelector(".movies-list");
 
@@ -25,7 +24,6 @@ searchForm.addEventListener("submit", event => {
     callback: res => getMoviesData(res, renderSearchResults)
   });
 });
-
 function renderSearchResults(results) {
   while (moviesList.firstChild) moviesList.removeChild(moviesList.firstChild);
   if (results.length == 0) {
@@ -36,15 +34,16 @@ function renderSearchResults(results) {
   }
   results.forEach(movie => {
     let movieItem = document.createElement("li");
-
+    movieItem.classList.add("movieData");
     let movieTitle = document.createElement("span");
+    movieTitle.classList.add("movie_title");
     movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
 
     let moviePoster = document.createElement("img");
     moviePoster.classList.add("movie-poster");
     moviePoster.src = imagesUrl + movie.posterPath;
     //popup eventlistener
-    moviePoster.addEventListener("click", event => {
+    movieItem.addEventListener("click", event => {
       let popupContainer = document.querySelector(".popup-container");
       popupContainer.classList.add("popup-container-onclick");
 
@@ -79,10 +78,16 @@ function renderSearchResults(results) {
         getSimilarMoviesData(response, renderSimilars)
       );
       function renderSimilars(similars) {
-        // similars = similars.results.filter((movie, index) => index < 5);
-        // console.log(similars);
         similars.forEach(movie => {
           let moviePoster = document.createElement("img");
+          let container = document.createElement("div");
+          container.classList.add("movieContainer");
+          container.appendChild(moviePoster);
+          let titleContainer = document.createElement("div");
+          let movieTitle = document.createElement("span");
+          movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
+          titleContainer.appendChild(movieTitle);
+          container.appendChild(titleContainer);
           moviePoster.classList.add("pointer-poster");
           moviePoster.addEventListener("click", function(e) {
             while (popupContent.firstChild)
