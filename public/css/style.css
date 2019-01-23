@@ -1,49 +1,132 @@
-*{
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-
-.body--style{
+.body--style {
     background: url("https://images.unsplash.com/photo-1485095329183-d0797cdc5676?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80") no-repeat;
     background-size: cover;
     background-position: center;
-    height: 100vh;
     position: relative;
-
-    
+    min-height: 100vh;
+    background-attachment: fixed;
+    font-size: 1.1em;
 }
-
-.overlay{ background-color: #000; opacity: 0.7; height: 100vh; width: 100% }
-
-.search_form{
-    position: absolute;
-     display: flex;
+.overlay {
+    background: rgba(0, 0, 0, 0.7);
+    min-height: 100vh;
+    width: 100%;
+    top: 0;
+}
+.search_form {
+    display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     width: 100%;
     text-align: center;
-    margin-top: 10%;
-    
+    padding-top: 7%;
 }
-
 .search_input,
 .search_submit {
     padding: 1.5em 2em;
     border: none;
-    /* border-radius: 2px */
     font-size: 1em;
     font-family: 'Times New Roman', Times, serif;
-
+    outline: none;
+    border-radius: 2px;
+    color: black;
 }
-.search_input:hover {
-    border: none;
-
+.search_submit:hover {
+    cursor: pointer;
+    background-color: gray;
 }
-
 .formContent input {
-        padding: 1.5em 8em;
-        background: #fff;
-
+    padding: 1.5em 8em;
+    background: #fff;
 }
-
+.movies-list {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: wrap;
+}
+.movieData {
+    display: flex;
+    margin: 1em;
+    flex-direction: column;
+    width: 20%;
+    cursor: pointer;
+}
+.movieContainer {
+    margin: 1em auto;
+    text-align: center;
+    color: white;
+}
+.movieData img {
+    width: 65%;
+    max-height: 15em;
+    margin: 0 auto;
+    box-shadow: 0 2px 2px 1px rgba(5, 5, 5, 0.2);
+    transition: .2s;
+    border-radius: 5px;
+}
+.container {
+    margin: 1em;
+}
+.popup-container {
+    font-family: "Noto Sans KR";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #575c6db9;
+    visibility: hidden;
+    opacity: 0;
+}
+.popup-container-onclick {
+    visibility: visible;
+    opacity: 1;
+}
+.popup-box {
+    margin: 150px auto;
+    padding: 0 20px 20px 20px;
+    border-radius: 10px;
+    background: #fff;
+    width: 35%;
+}
+.popup-content {
+    margin: 150px auto;
+    padding: 0 20px 20px 20px;
+    border-radius: 10px;
+    background: #fff;
+    width: 35%;
+}
+.close-popup {
+    position: relative;
+    left: 95%;
+    bottom: 100%;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 2.5em;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    color: #464b5e;
+}
+.popup-confirm-button {
+    position: relative;
+    left: 85%;
+    font-family: "Noto Sans KR";
+    text-decoration: none;
+    font-weight: bold;
+    text-decoration: underline;
+    padding: 5px;
+    border-radius: 4px;
+    background: #fff;
+    color: #464b5e;
+    border: #464b5e solid;
+}
+.popup-confirm-button:hover {
+    cursor: pointer;
+    background: #464b5e;
+    color: #fff;
+}
