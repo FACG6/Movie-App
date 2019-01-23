@@ -7,61 +7,121 @@ let searchForm = document.querySelector(".search_form");
 let searchInput = document.querySelector(".search_input");
 let container = document.querySelector(".container");
 let moviesList = document.querySelector(".movies-list");
-searchForm.addEventListener("click", event => {
-    event.preventDefault();
-    let query = searchInput.value;
-    searchInput.value = "";
-    fetch({
-        method: "GET",
-        url: apiUrl,
-        query: query,
-        callback: res => getMoviesData(res, renderSearchResults)
-    });
+
+searchForm.addEventListener("submit", event => {
+  event.preventDefault();
+
+  let query = searchInput.value;
+  if (!query) {
+    alert("Please Enter a valid movie name");
+    return;
+  }
+  searchInput.value = "";
+  fetch({
+    method: "GET",
+    url: apiUrl,
+    query: query,
+    callback: res => getMoviesData(res, renderSearchResults)
+  });
 });
 function renderSearchResults(results) {
-    results.forEach(movie => {
-        let movieItem = document.createElement("li");
-        
-        movieItem.classList.add("movieData");
-        movieItem.addEventListener("click", event => {
-            let popupContainer = document.querySelector(".popup-container");
-            let popupClose = document.querySelector(".close-popup");
-            let popupContent = document.querySelector(".popup-content");
-            popupContainer.classList.add("popup-container-onclick");
-            popupClose.addEventListener("click", event => {
-                popupContent.innerHTML = "";
-                popupContainer.classList.remove("popup-container-onclick");
+  while (moviesList.firstChild) moviesList.removeChild(moviesList.firstChild);
+  if (results.length == 0) {
+    let noResult = document.createElement("li");
+    noResult.textContent = "There are no movies with the name you entered";
+    moviesList.appendChild(noResult);
+    return;
+  }
+  results.forEach(movie => {
+    let movieItem = document.createElement("li");
+    movieItem.classList.add("movieData");
+    let movieTitle = document.createElement("span");
+    movieTitle.classList.add("movie_title");
+    movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
+
+    let moviePoster = document.createElement("img");
+    moviePoster.classList.add("movie-poster");
+    moviePoster.src = imagesUrl + movie.posterPath;
+    //popup eventlistener
+    movieItem.addEventListener("click", event => {
+      let popupContainer = document.querySelector(".popup-container");
+      popupContainer.classList.add("popup-container-onclick");
+
+      let popupClose = document.querySelector(".close-popup");
+      popupClose.addEventListener("click", event => {
+        while (popupContent.firstChild)
+          popupContent.removeChild(popupContent.firstChild);
+        popupContainer.classList.remove("popup-container-onclick");
+      });
+      let imgDiv = document.createElement("div");
+      imgDiv.classList.add("popup-image-div");
+      let contentDiv = document.createElement("div");
+      contentDiv.classList.add("content-div");
+      let popupContent = document.querySelector(".popup-content");
+
+      let movieTitle = document.createElement("h2");
+      movieTitle.textContent = movie.title;
+
+      let moviePoster = document.createElement("img");
+      moviePoster.classList.add("popup-movie-poster");
+      moviePoster.src = imagesUrl + movie.posterPath;
+
+      let movieDate = document.createElement("h4");
+      movieDate.textContent = movie.releaseDate;
+
+      let movieDescription = document.createElement("p");
+      movieDescription.textContent = movie.overview;
+
+      let similarsDiv = document.createElement("div");
+      similarsDiv.classList.add("similars-div");
+      getSimilarMovies(movie.id, response =>
+        getSimilarMoviesData(response, renderSimilars)
+      );
+      function renderSimilars(similars) {
+        similars.forEach(movie => {
+          let moviePoster = document.createElement("img");
+          let container = document.createElement("div");
+          container.classList.add("movieContainer");
+          container.appendChild(moviePoster);
+          let titleContainer = document.createElement("div");
+          let movieTitle = document.createElement("span");
+          movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
+          titleContainer.appendChild(movieTitle);
+          container.appendChild(titleContainer);
+          moviePoster.classList.add("pointer-poster");
+          moviePoster.addEventListener("click", function(e) {
+            while (popupContent.firstChild)
+              popupContent.removeChild(popupContent.firstChild);
+            popupContainer.classList.remove("popup-container-onclick");
+            fetch({
+              method: "GET",
+              url: apiUrl,
+              query: movie.title,
+              callback: res => getMoviesData(res, renderSearchResults)
             });
-            let movieTitle = document.createElement("h2");
-            movieTitle.classList.add("movie_title");
-            movieTitle.textContent = movie.title;
-
-            let moviePoster = document.createElement("img");
-            moviePoster.src = imagesUrl + movie.posterPath;
-
-            let movieDate = document.createElement("h4");
-            movieDate.textContent = movie.releaseDate;
-
-            let movieDescription = document.createElement("p");
-            movieDescription.textContent = movie.overview;
-
-            popupContent.appendChild(moviePoster);
-            popupContent.appendChild(movieTitle);
-            popupContent.appendChild(movieDate);
-            popupContent.appendChild(movieDescription);
+          });
+          moviePoster.src = imagesUrl + movie.posterPath;
+          moviePoster.style.width = "75px";
+          moviePoster.style.height = "100px";
+          similarsDiv.appendChild(moviePoster);
         });
-        let container = document.createElement("div");
-        container.classList.add("movieContainer");
-        let moviePoster = document.createElement("img");
-        container.appendChild(moviePoster);
-        let titleContainer = document.createElement("div");
-        let movieTitle = document.createElement("span");
-        movieTitle.textContent = movie.title + " " + `(${movie.releaseDate})`;
-        titleContainer.appendChild(movieTitle);
-        container.appendChild(titleContainer);
-        moviePoster.src = imagesUrl + movie.posterPath;
-        movieItem.appendChild(moviePoster);
-        movieItem.appendChild(container);
-        moviesList.appendChild(movieItem);
+      }
+
+      let similarsHeading = document.createElement("h2");
+      similarsHeading.textContent = "Similar Movies";
+
+      imgDiv.appendChild(moviePoster);
+      popupContent.appendChild(imgDiv);
+      popupContent.appendChild(contentDiv);
+      contentDiv.appendChild(movieTitle);
+      contentDiv.appendChild(movieDate);
+      contentDiv.appendChild(movieDescription);
+      contentDiv.appendChild(similarsHeading);
+      contentDiv.appendChild(similarsDiv);
     });
+
+    movieItem.appendChild(moviePoster);
+    movieItem.appendChild(movieTitle);
+    moviesList.appendChild(movieItem);
+  });
 }
