@@ -13,8 +13,8 @@
     "tape": "^4.9.2"
   },
   "scripts": {
-    "test": "nodemon public/js/test.js | tap-spec",
-    "cover": "istanbul cover tape ./public/js/test/test.js"
+    "test": "nodemon ./public/js/test.js | tap-spec",
+    "cover": "istanbul cover tape ./public/js/test.js"
   },
   "repository": {
     "type": "git",
