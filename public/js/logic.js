@@ -1,20 +1,25 @@
 // general request function
-function fetch({ method, url, query, callback }) {
+function fetch({method,url,callback}) {
+  console.log(url);
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
+        const response = xhr.responseText;
         callback(response);
+      }
+      else{
+        const error = `Error, status is ${xhr.status}`
+        callback(error);
       }
     }
   };
-  xhr.open(method, url + query);
+  xhr.open(method, url);
   xhr.send();
 }
-// This function returns an array of the movie details, stored in objects //
+
 function getMoviesData(response, callback) {
-  let data = response.results.map(movie => {
+  let data = JSON.parse(response).results.map(movie => {
     return {
       id: movie.id,
       title: movie.title,
@@ -28,7 +33,7 @@ function getMoviesData(response, callback) {
 }
 
 function getSimilarMoviesData(response, callback) {
-  let allSimilarMovies = response.results.filter((movie, index) => index < 5);
+  let allSimilarMovies = JSON.parse(response).results.filter((movie, index) => index < 5);
   allSimilarMovies = allSimilarMovies.map(similarMovie => {
     return {
       title: similarMovie.original_title,
@@ -37,6 +42,7 @@ function getSimilarMoviesData(response, callback) {
   });
   callback(allSimilarMovies);
 }
+
 function getSimilarMovies(movieId, callback) {
   let url = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${
     config.MY_KEY
@@ -48,12 +54,12 @@ function getSimilarMovies(movieId, callback) {
     callback: callback
   });
 }
+
 if (typeof module !== "undefined") {
   module.exports = {
     fetch,
-    getRequest,
     getMoviesData,
     getSimilarMovies,
-    getSimilarMoviesDatas
+    getSimilarMoviesData
   };
 }
